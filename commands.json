@@ -1,0 +1,81 @@
+[
+  {
+    "name": "Read Temperature",
+    "hexBytes": "012300FF",
+    "type": "addressable",
+    "responseType": "text",
+    "addressByte": 2,
+    "extraValue": false
+  },
+  {
+    "name": "Read Humidity",
+    "hexBytes": "012400FF",
+    "type": "addressable",
+    "responseType": "text",
+    "addressByte": 2,
+    "extraValue": false
+  },
+  {
+    "name": "Get Device ID",
+    "hexBytes": "012500FF",
+    "type": "addressable",
+    "responseType": "binary",
+    "addressByte": 2,
+    "extraValue": false
+  },
+  {
+    "name": "Reset Device",
+    "hexBytes": "0230FF",
+    "type": "addressable",
+    "responseType": "none",
+    "addressByte": 1,
+    "extraValue": false
+  },
+  {
+    "name": "System Status",
+    "hexBytes": "AA5501",
+    "type": "none",
+    "responseType": "binary",
+    "extraValue": false
+  },
+  {
+    "name": "Get Firmware Version",
+    "hexBytes": "AA5502",
+    "type": "none",
+    "responseType": "text",
+    "extraValue": false
+  },
+  {
+    "name": "Start Calibration",
+    "hexBytes": "034000CC",
+    "type": "addressable",
+    "responseType": "none",
+    "addressByte": 2,
+    "extraValue": false
+  },
+  {
+    "name": "Read Sensor Data",
+    "hexBytes": "012600FF",
+    "type": "addressable",
+    "responseType": "binary",
+    "addressByte": 2,
+    "extraValue": false
+  },
+  {
+    "name": "Set Threshold",
+    "hexBytes": "04500064FF",
+    "type": "addressable",
+    "responseType": "none",
+    "addressByte": 2,
+    "extraValue": true,
+    "min": 0,
+    "max": 255
+  },
+  {
+    "name": "Ping All Devices",
+    "hexBytes": "FFFFFF",
+    "type": "none",
+    "responseType": "binary",
+    "extraValue": false
+  }
+]
