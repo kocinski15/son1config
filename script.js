@@ -131,25 +131,33 @@ class SerialCommandInterface {
         }
     }
 
-    async startReading() {
-        const decoder = new TextDecoderStream();
-        const inputDone = this.port.readable.pipeTo(decoder.writable);
-        const inputStream = decoder.readable;
-        const reader = inputStream.getReader();
-        
-        try {
-            while (true) {
-                const { value, done } = await reader.read();
-                if (done) break;
-                // Handle incoming data if needed
+async startReading() {
+    const decoder = new TextDecoderStream();
+    this.port.readable.pipeTo(decoder.writable);
+    const inputStream = decoder.readable;
+    const reader = inputStream.getReader();
+    
+    try {
+        while (true) {
+            const { value, done } = await reader.read();
+            if (done) break;
+            
+            if (value) {
+                // Process and display the response immediately as it arrives
+                this.displayResponse(
+                    new TextEncoder().encode(value),
+                    'Response',
+                    '',
+                    ''
+                );
             }
-        } catch (error) {
-            console.error('Reading error:', error);
-        } finally {
-            reader.releaseLock();
         }
+    } catch (error) {
+        console.error('Reading error:', error);
+    } finally {
+        reader.releaseLock();
     }
-
+}
     async loadDefaultCommands() {
         try {
             const response = await fetch('commands.json');
@@ -312,19 +320,6 @@ class SerialCommandInterface {
             await this.writer.write(buffer);
             
             // Wait for response if expected
-            if (this.reader && bytes.length > 0 && cmd && cmd.responseType !== 'none') {
-                await new Promise(resolve => setTimeout(resolve, 100)); // 100ms delay
-                
-                try {
-                    const { value, done } = await this.reader.read();
-                    if (!done && value) {
-                        this.displayResponse(value, commandName, address, fullCommandHex);
-                    }
-                } catch (error) {
-                    // Timeout or no response is acceptable for some commands
-                    console.log('No response received or read timeout');
-                }
-            }
         } catch (error) {
             throw new Error(`Failed to write to serial port: ${error.message}`);
         }
