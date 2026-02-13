@@ -313,7 +313,7 @@ class SerialCommandInterface {
             
             // Wait for response if expected
             if (this.reader && bytes.length > 0 && cmd && cmd.responseType !== 'none') {
-                await new Promise(resolve => setTimeout(resolve, 50)); // 50ms delay
+                await new Promise(resolve => setTimeout(resolve, 100)); // 100ms delay
                 
                 try {
                     const { value, done } = await this.reader.read();
