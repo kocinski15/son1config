@@ -266,14 +266,14 @@ class SerialCommandInterface {
                     const fullCommandHex = commandBytes.map(b => b.toString(16).toUpperCase().padStart(2, '0')).join('');
                     
                     // Show sending message
-                    this.showResponse(`Sending ${cmd.name} (${cmd.hexBytes}) to 0x${addr.toString(16).toUpperCase()}`, 'info');
+                    //this.showResponse(`Sending ${cmd.name} (${cmd.hexBytes}) to 0x${addr.toString(16).toUpperCase()}`, 'info');
                     
                     // Send the command
                     await this.sendBinaryCommand(commandBytes, cmd.name, `0x${addr.toString(16).toUpperCase()}`, cmd, fullCommandHex);
                     
                     // 50ms break between addresses (except for last one)
                     if (i < addresses.length - 1) {
-                        await new Promise(resolve => setTimeout(resolve, 50));
+                        await new Promise(resolve => setTimeout(resolve, 100));
                     }
                 }
             } else {
