@@ -132,30 +132,50 @@ class SerialCommandInterface {
     }
 
 async startReading() {
+    console.log('[Serial Debug] startReading() initiated');
     try {
         const reader = this.port.readable.getReader();
-        
+        console.log('[Serial Debug] Reader obtained from port.readable');
+
         try {
+            let readCount = 0;
             while (true) {
                 const { value, done } = await reader.read();
-                if (done) break;
+                readCount++;
                 
+                if (done) {
+                    console.log('[Serial Debug] Stream closed (done == true) after', readCount, 'reads');
+                    break;
+                }
+
                 if (value) {
-                    // value is already a Uint8Array from the serial port
-                    // Display it immediately
-                    this.displayResponse(
-                        value,  // Already Uint8Array, no conversion needed
-                        'Response',
-                        '',
-                        ''
-                    );
+                    // Log as hex bytes
+                    const hexString = Array.from(value).map(b => b.toString(16).toUpperCase().padStart(2, '0')).join(' ');
+                    const byteArray = Array.from(value);
+                    console.log(`[Serial Debug] Read #${readCount}: Received ${value.length} bytes: [${hexString}]`);
+                    console.log(`[Serial Debug] Byte values: [${byteArray.join(', ')}]`);
+                    
+                    // Also try to decode as text
+                    try {
+                        const text = new TextDecoder().decode(value);
+                        console.log(`[Serial Debug] Decoded as text: "${text}"`);
+                    } catch (err) {
+                        console.log('[Serial Debug] Could not decode as text:', err.message);
+                    }
+                    
+                    // Call displayResponse
+                    console.log('[Serial Debug] Calling displayResponse()');
+                    this.displayResponse(value, 'Response', '', '');
+                } else {
+                    console.log(`[Serial Debug] Read #${readCount}: Received but value is empty/null`);
                 }
             }
         } finally {
             reader.releaseLock();
+            console.log('[Serial Debug] Reader lock released');
         }
     } catch (error) {
-        console.error('Reading error:', error);
+        console.error('[Serial Debug] startReading() error:', error);
     }
 }
     
